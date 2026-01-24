@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Felix Cenusa, Software Engineer</title>
+<link rel="icon" href="https://avatars.githubusercontent.com/u/106628617?v=4" type="image/x-icon">
+<style>
+/* === COLOR VARIABLES === */
+:root{--bg:#0d0d1a;--bg2:#050510;--text:#e6edf3;--subtle:#8b949e;--link-bg:rgba(255,255,255,.05);--link-border:rgba(255,255,255,.15);--link-hover:rgba(255,255,255,.12);--focus:#a78bfa;--portal1:#1a0a2e;--portal2:#0f172a;--portal3:#581c87}
+@media(prefers-color-scheme:light){:root{--bg:#f0f4ff;--bg2:#e0e7ff;--text:#1a1a2e;--subtle:#6c757d;--link-bg:rgba(255,255,255,.8);--link-border:#c7d2fe;--link-hover:#e0e7ff;--portal1:#c4b5fd;--portal2:#a5b4fc;--portal3:#818cf8}}
+*{box-sizing:border-box;margin:0}
+
+/* === PARALLAX STAR BACKGROUND === */
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:radial-gradient(ellipse at bottom,var(--portal1) 0%,var(--bg) 50%,var(--bg2) 100%);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:3rem 1.25rem;line-height:1.5;overflow:hidden}
+#stars,#stars2,#stars3{position:fixed;top:0;left:0;width:1px;height:1px;background:transparent;pointer-events:none}
+#stars{animation:animStar 50s linear infinite}
+#stars2{animation:animStar 100s linear infinite}
+#stars3{animation:animStar 150s linear infinite}
+#stars::after,#stars2::after,#stars3::after{content:'';position:absolute;top:100vh;width:inherit;height:inherit;box-shadow:inherit}
+@keyframes animStar{0%{transform:translateY(0)}100%{transform:translateY(-100vh)}}
+@media(min-height:2000px){#stars::after,#stars2::after,#stars3::after{top:2000px}@keyframes animStar{0%{transform:translateY(0)}100%{transform:translateY(-2000px)}}}
+
+/* === MAIN LAYOUT === */
+main{width:100%;max-width:680px;flex:1;position:relative;z-index:1}
+header{text-align:center;margin-bottom:2rem}
+@media(max-width:480px){body{padding:2rem 1rem}header{margin-bottom:1.5rem}}
+
+/* === PROFILE PICTURE === */
+#pfp{width:96px;height:96px;border-radius:50%;cursor:pointer;transition:transform .3s,box-shadow .3s;margin-bottom:1rem;border:3px solid var(--link-border)}
+#pfp:hover{transform:scale(1.05);box-shadow:0 0 20px var(--portal3)}
+
+/* === PROFILE POPUP OVERLAY === */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:.3s;z-index:10}
+.overlay:target{opacity:1;visibility:visible}
+.popup{background:var(--bg);padding:1.5rem;border-radius:16px;text-align:center;max-width:320px;width:90%;transform:scale(.8);transition:.3s}
+.overlay:target .popup{transform:scale(1)}
+.popup img{width:180px;height:180px;border-radius:50%;margin-bottom:1rem}
+.popup p{font-size:1.1rem;line-height:1.6}
+.popup-close{position:absolute;top:1rem;right:1rem;font-size:2rem;color:var(--text);text-decoration:none;opacity:.7}
+.popup-close:hover{opacity:1}
+
+h1{font-size:clamp(1.75rem,5vw,2.5rem);font-weight:700;margin-bottom:.25rem}
+.subtitle{color:var(--subtle);font-size:1.05rem;margin-bottom:.5rem}
+
+/* === ROTATING MESSAGES === */
+#msg{color:var(--portal3);font-size:.95rem;min-height:1.5em;opacity:0;transition:opacity .6s ease-in-out;overflow:hidden;background:linear-gradient(90deg,var(--bg),var(--text),var(--bg));background-size:200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite}
+#msg.show{opacity:1}
+@keyframes shimmer{0%{background-position:100%}100%{background-position:-100%}}
+
+/* === LINK BUTTONS === */
+nav{display:flex;flex-direction:column;gap:.75rem}
+nav a{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:52px;padding:.875rem 1.25rem;background:var(--link-bg);border:1px solid var(--link-border);border-radius:10px;color:var(--text);text-decoration:none;font-weight:500;font-size:1rem;transition:background .15s,transform .1s;backdrop-filter:blur(4px)}
+nav a:hover{background:var(--link-hover)}
+nav a:active{transform:scale(.98)}
+nav a:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+nav a svg{width:20px;height:20px;flex-shrink:0}
+
+/* === EMAIL ROW WITH COPY BUTTON === */
+.email-row{display:flex;gap:.5rem}
+.email-row a{flex:1}
+button{background:var(--link-bg);border:1px solid var(--link-border);border-radius:10px;min-width:52px;min-height:52px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;position:relative;transition:background .15s;backdrop-filter:blur(4px)}
+button:hover{background:var(--link-hover)}
+button svg{width:20px;height:20px}
+.toast{position:absolute;top:-2rem;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);font-size:.75rem;padding:.25rem .5rem;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+
+/* === FOOTER === */
+footer{margin-top:2.5rem;color:var(--subtle);font-size:.875rem;text-align:center;position:relative;z-index:1}
+</style>
+</head>
+<body>
+
+<!-- === PARALLAX STAR BACKGROUND (3 layers) === -->
+<div id="stars"></div>
+<div id="stars2"></div>
+<div id="stars3"></div>
+
+<main>
+<header>
+<!-- === PROFILE PICTURE (click to expand) === -->
+<a href="#popup"><img id="pfp" src="https://avatars.githubusercontent.com/u/106628617?v=4" alt="Felix Cenusa"></a>
+
+<h1>Felix Cenusa</h1>
+<p class="subtitle">Software Engineer, Full-Stack</p>
+
+<!-- === ROTATING MESSAGES (loaded from messages.txt) === -->
+<p id="msg"></p>
+</header>
+
+<!-- === PROFILE POPUP OVERLAY === -->
+<div class="overlay" id="popup">
+<div class="popup">
+<img src="https://avatars.githubusercontent.com/u/106628617?v=4" alt="Felix Cenusa">
+<p>Born in Spain, grew up in Romania, live in Sweden and speak four languages fluently</p>
+</div>
+<a class="popup-close" href="#" aria-label="Close">&times;</a>
+</div>
+
+<nav>
+<!-- === LINK ICONS (inline SVGs) === -->
+<a href="https://best.felixcenusa.com/portfolio/projects/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Portfolio</a>
+<a href="https://linkedin.com/in/felixcenusa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>LinkedIn</a>
+<a href="https://github.com/FelixCenusa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>GitHub</a>
+<a href="https://felixcenusa.com/Felix/CV_Hosted" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>CV (PDF)</a>
+<div class="email-row">
+<a href="mailto:felixcenusa@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Email</a>
+<button type="button" aria-label="Copy email address"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="toast">Copied</span></button>
+</div>
+</nav>
+</main>
+
+<footer>© Felix Cenusa <span id="y"></span></footer>
+
+<script>
+/* === FOOTER YEAR === */
+document.getElementById('y').textContent=new Date().getFullYear();
+
+/* === PROFILE POPUP: CLOSE ON OVERLAY CLICK === */
+document.getElementById('popup').addEventListener('click',function(e){
+if(e.target===this)history.back();
+});
+
+/* === ANALYTICS: LOG LINK CLICKS === */
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>console.log('click:'+a.textContent.trim())));
+
+/* === COPY EMAIL BUTTON === */
+document.querySelector('button').addEventListener('click',function(){
+navigator.clipboard.writeText('felixcenusa@gmail.com');
+console.log('click:CopyEmail');
+const t=this.querySelector('.toast');
+t.classList.add('show');
+setTimeout(()=>t.classList.remove('show'),1200);
+});
+
+/* === PARALLAX STAR GENERATOR (responsive to all screens) === */
+(function(){
+const w=Math.max(window.innerWidth,2000),h=Math.max(window.innerHeight,2000),max=Math.max(w,h);
+function genStars(n){let s='';for(let i=0;i<n;i++)s+=(i?',':'')+(Math.random()*max|0)+'px '+(Math.random()*max|0)+'px #fff';return s;}
+const d=[700,200,100];
+if(window.innerWidth<768)d[0]=400,d[1]=100,d[2]=50;
+document.getElementById('stars').style.boxShadow=genStars(d[0]);
+document.getElementById('stars2').style.boxShadow=genStars(d[1]);
+document.getElementById('stars3').style.boxShadow=genStars(d[2]);
+document.getElementById('stars2').style.width=document.getElementById('stars2').style.height='2px';
+document.getElementById('stars3').style.width=document.getElementById('stars3').style.height='3px';
+})();
+
+/* === ROTATING MESSAGES === */
+const MSG_INTERVAL=8000;
+const MESSAGES=[
+'Keep building 🚀',
+'Stay curious 🔍',
+'Dream big 🌟',
+'Code with passion 💻',
+'Never stop learning 📚',
+'You got this 💪',
+'Make it happen ✨'
+];
+(function(){
+const el=document.getElementById('msg');
+let i=0;
+function show(){
+el.textContent=MESSAGES[i];
+el.classList.add('show');
+setTimeout(()=>el.classList.remove('show'),2200);
+i=(i+1)%MESSAGES.length;
+}
+setInterval(show,MSG_INTERVAL);
+})();
+</script>
+</body>
+</html>
